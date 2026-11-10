@@ -1,5 +1,7 @@
 # 星火知识库 · RAG 问答
 
+[![CI](https://github.com/Hyxxt/rag-kb/actions/workflows/ci.yml/badge.svg)](https://github.com/Hyxxt/rag-kb/actions/workflows/ci.yml)
+
 一个用于求职展示的 RAG 全栈项目：上传文档后自动切块、建立中文倒排索引；提问时先检索 Top-4 片段，再让大模型基于片段回答，并标注 `[编号]` 引用。
 
 在线演示：<https://rag-kb-nr1a.onrender.com>（Render 免费实例，首次打开需要 30–60 秒唤醒）
@@ -100,6 +102,23 @@ npm run dev
 
 不配置 Key 也能跑：问答页会显示检索到的原文片段，只是没有模型生成的总结。
 
+### 冒烟测试
+
+保持服务运行，另开一个终端：
+
+```powershell
+npm run smoke
+```
+
+默认请求 `http://localhost:3000`；端口不同时：
+
+```powershell
+$env:BASE_URL = "http://localhost:3101"; npm run smoke
+```
+
+检查首页、示例载入、文档 / 片段数量、10 题检索评测、问答接口和参数校验；
+不配置 `LLM_API_KEY` 也能跑，CI 里用临时数据库执行同一套检查。
+
 ### 环境变量
 
 | 变量 | 必填 | 说明 |
@@ -172,6 +191,9 @@ lib/
   answer.ts                  提示词、模型调用、降级
   samples.ts                 示例文档与题库
   types.ts                   共享类型
+scripts/
+  smoke.mjs                  接口冒烟测试
+.github/workflows/ci.yml     lint + build + smoke
 ```
 
 ## 已知限制
