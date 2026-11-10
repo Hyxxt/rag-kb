@@ -1,9 +1,10 @@
 import { connection } from "next/server";
-import { createDocument, listDocuments } from "@/lib/store";
+import { createDocument, listDocuments, seedIfEmpty } from "@/lib/store";
 
 export async function GET() {
   await connection();
   try {
+    await seedIfEmpty();
     const documents = await listDocuments();
     return Response.json({ documents });
   } catch (error) {

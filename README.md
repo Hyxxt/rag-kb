@@ -108,6 +108,7 @@ npm run dev
 | `TURSO_DATABASE_URL` | 线上必填 | 填了就切换 Turso，不填用本地 SQLite |
 | `TURSO_AUTH_TOKEN` | 线上必填 | Turso 访问令牌 |
 | `RAG_DB_DIR` | 否 | 本地 SQLite 目录，默认项目下 `.data/` |
+| `AUTO_SEED` | 否 | 设为 `1` 时空库自动载入示例，适合没有持久磁盘的演示环境 |
 
 `.env.local` 已被 `.gitignore` 忽略，不要提交密钥。
 

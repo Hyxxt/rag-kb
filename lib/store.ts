@@ -123,6 +123,29 @@ export async function deleteDocument(id: string): Promise<void> {
   ]);
 }
 
+let autoSeedPromise: Promise<{ inserted: number }> | null = null;
+
+/**
+ * 线上没有持久磁盘时（AUTO_SEED=1），冷启动后自动补一次示例数据，
+ * 避免演示站打开是空库。并发请求共用同一个 Promise，避免重复写入。
+ */
+export async function seedIfEmpty(): Promise<{ inserted: number }> {
+  if (process.env.AUTO_SEED !== "1") return { inserted: 0 };
+
+  if (!autoSeedPromise) {
+    autoSeedPromise = (async () => {
+      const rows = await dbAll(`SELECT COUNT(*) AS n FROM documents`);
+      if (Number(rows[0]?.n ?? 0) > 0) return { inserted: 0 };
+      return seedDocuments();
+    })().catch((error) => {
+      autoSeedPromise = null;
+      throw error;
+    });
+  }
+
+  return autoSeedPromise;
+}
+
 export async function seedDocuments(): Promise<{ inserted: number }> {
   const rows = await dbAll(
     `SELECT COUNT(*) AS n FROM documents WHERE source = 'sample'`,
