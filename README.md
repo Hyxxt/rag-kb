@@ -136,8 +136,10 @@ npm run dev
 
 ## 部署到 Render + Turso
 
+仓库根目录带了 `render.yaml`，也可以在 Render 里用 Blueprint 一键创建。
+
 1. 在 Turso 新建数据库，拿到 `libsql://...` 地址和 token。
-2. Render 新建 Web Service，连接仓库。
+2. Render 新建 Web Service（或 Blueprint），连接仓库。
 3. Build Command：`npm install && npm run build`
 4. Start Command：`npm run start -- -p $PORT`
 5. 环境变量填 `LLM_BASE_URL`、`LLM_API_KEY`、`LLM_MODEL`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`。
