@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { answerQuestion } from "@/lib/answer";
 import { retrieve } from "@/lib/retrieve";
+import { seedIfEmpty } from "@/lib/store";
 import type { QueryResponse } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -27,6 +28,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    // 冷启动直接调 API 时也要先补示例数据，否则会检索到空库。
+    await seedIfEmpty();
     const sources = await retrieve(cleanQuestion, 4);
     const result = await answerQuestion(cleanQuestion, sources);
     const payload: QueryResponse = {

@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { answerQuestion } from "@/lib/answer";
 import { retrieve } from "@/lib/retrieve";
 import { EVAL_QUESTIONS } from "@/lib/samples";
+import { seedIfEmpty } from "@/lib/store";
 import type { EvalResponse, EvalRow } from "@/lib/types";
 
 export const maxDuration = 60;
@@ -18,6 +19,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    // 冷启动直接跑评测时也要先补示例数据，避免 0/10 的假失败。
+    await seedIfEmpty();
     const rows: EvalRow[] = [];
 
     for (const item of EVAL_QUESTIONS) {
